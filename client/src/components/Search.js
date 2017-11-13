@@ -48,11 +48,21 @@ class Search extends Component {
             </div>
             <div className="form-group">
               <h4>Start Year</h4>
-              <input type="text" className="form-control" />
+              <div class="input-group date" id="datetimepicker1">
+                <input type="text" class="form-control" />
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" />
+                </span>
+              </div>
             </div>
             <div className="form-group">
-              <h4>End Year</h4>
-              <input type="text" className="form-control" />
+              <div class="input-group date" id="datetimepicker1">
+                <h4>End Year</h4>
+                <input type="text" class="form-control" />
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar" />
+                </span>
+              </div>
             </div>
             <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>
               Search
