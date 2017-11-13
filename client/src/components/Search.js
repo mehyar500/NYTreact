@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import API from './Utils/API';
 
 class Search extends Component {
@@ -7,6 +6,7 @@ class Search extends Component {
         query: "",
         results: []
     }
+
 
     handleInputCahnge = event => {
         const {name, value} = event.target;
@@ -17,9 +17,23 @@ class Search extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        API.get(this.state.query)
-           .then(res => this.setState({results: res.data}))
-           .catch(err => console.log(err));
+        return (
+          API.get(this.state.query)
+             .then(res => {console.log(res); this.setState({results: res})})
+             .catch(err => console.log(err))
+       );
+    }
+
+
+
+    listArticles = () => {
+      console.log(this.state.results.docs);
+      let articles = this.state.results.docs;
+      // return (
+      //   this.state.results.map (article => (<ul>
+      //     <li key={article._id}>{article}</li>
+      //   </ul>))
+      // );
     }
 
     render() {
@@ -56,7 +70,7 @@ class Search extends Component {
                   <h3 className="text-center">Results</h3>
                 </div>
                 <div className="panel-body">
-
+                  {this.listArticles()}
                 </div>
               </div>
             </div>
@@ -75,4 +89,5 @@ export default Search;
                   //         </a>
                   //         <button type="button">Save</button>
                   //       </li>;
-                  //
+                  //   })}
+                  // </ul>;
