@@ -7,12 +7,6 @@ class Main extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="jumbotron">
-                        <h2>New York Times Articles</h2>
-                        <p>Search for and save articles of interest!</p>
-                    </div>
-                </div>
-                <div className="row">
                     <Search />
                 </div>
                 {/* <div className="row">

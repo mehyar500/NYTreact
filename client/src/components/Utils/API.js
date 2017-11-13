@@ -6,11 +6,7 @@ export default {
     get: query => {
         const queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
         return axios.get(queryURLBase, {params: {q:query, "api-key": authKey}})
-                    .then(res =>{ console.log(res.data.response); return res.data.response;})
+                    .then(res =>{ console.log(res.data.response.docs); return res.data.response.docs;})
                     .catch(err => console.log(err));
-    },
-    response: []
+    }
 };
-
-
-// .data.response.docs
