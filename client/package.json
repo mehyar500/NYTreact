@@ -5,7 +5,10 @@
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "axios": "^0.17.1",
+    "moment": "^2.19.2",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
+    "react-bootstrap-daterangepicker": "^3.4.1",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.14"
   },
