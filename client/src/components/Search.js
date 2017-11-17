@@ -1,54 +1,48 @@
 import React, { Component } from "react";
-import * as bootstrap from "react-bootstrap";
-import * as moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
+import Result from "./Result";
 import API from "./Utils/API";
 
 
 class Search extends Component {
   state = {
     query: "",
-    startDate: moment().subtract(29, 'days'),
-    endDate: moment(),
+    startDate: "",
+    endDate: "",
     articles: [],
     saved: []
   };
 
   componentDidMount() {
-    API.get("Latest", this.state.startDate, this.state.endDate)
-      .then(res => {
-        console.log(res);
-        this.setState({ articles: res });
-      })
-      .catch(err => console.log(err));
+    API.getNytArticles("Latest")
+       .then(res => {console.log(res); this.setState({ articles: res });})
+       .catch(err => console.log(err));
+
+    API.getSavedArticles()
+       .then(res => {console.log(res.data); this.setState({saved: res.data});})
+       .catch(err => console.log(err));
   }
 
-  handleInputCahnge = event => {
+  handleChange = event => {
     console.log(event.target);
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
-  };    
-
-  handleDateChange = (startDate, endDate) => {
-    const { startDate, endDate } = this.state;
-      console.log("startDate: ", startDate, ", endDate: ", endDate);
-      return this.setState({ startDate: startDate, endDate: endDate });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    return API.get(this.state.query, this.state.startDate, this.state.endDate)
-        .then(res => {
-          this.setState({ articles: res });
-          console.log(this.state.articles);
-        })
-        .catch(err => console.log(err))
+    return API.getNytArticles(
+      this.state.query,
+      this.state.startDate,
+      this.state.endDate
+    )
+      .then(res => {this.setState({ articles: res }); console.log(this.state.articles);})
+      .catch(err => console.log(err));
   };
 
   render() {
-    return <div className="container">
+    return <div className="row">
         <div className="row">
           <div style={{ height: 300 }} className="jumbotron">
             <h1>New York Times Articles Search</h1>
@@ -56,34 +50,51 @@ class Search extends Component {
           <form>
             <div className="form-group">
               <h4>Topic</h4>
-              <input type="text" placeholder="Search For Articles." className="form-control" value={this.state.query} name="query" onChange={this.handleInputCahnge} />
+              <input type="text" placeholder="Search For Articles." className="form-control" value={this.state.query} name="query" onChange={this.handleChange} />
             </div>
             <div className="form-group">
-              <DateRangePicker startDate={moment("6/10/1986")} endDate={moment("3/1/2014")}>
-                <div>Pick Date Range!</div>
-              </DateRangePicker>
+              <h4>Start Year: {this.state.startYear}</h4>
+              <input type="date" value={this.state.startYear} className="form-control" id="startYear" onChange={this.handleChange} />
             </div>
-            <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>
+            <div className="form-group">
+              <h4>Start Year: {this.state.startYear}</h4>
+              <input type="date" value={this.state.startYear} className="form-control" id="startYear" onChange={this.handleChange} />
+            </div>
+            <button className="btn btn-block" type="button" onClick={this.handleSubmit}>
               Search
             </button>
           </form>
+          <hr />
         </div>
         <div className="row">
-          <div className="panel panel-primary">
+          <div className="panel panel-default">
             <div className="panel-heading">
-              <h3>Articles List</h3>
+              <h3 className="panel-title">Articles List</h3>
             </div>
             <div className="panel-body">
               {this.state.articles.length ? <div className="list-overflow-container">
                   <ul className="list-group">
-                    {this.state.articles.map(article => {
-                      return <li className="list-group-item" key={article._id} date={article.pub_date}>
-                          <a href={article.web_url}>
-                            <h3>Headline: {article.headline.main}</h3>
-                            <h4>Published: {article.pub_date}</h4>
-                            <p>{article.snippet}</p>
-                          </a>
-                          <button className="btn btn-block">Save</button>
+                    {this.state.articles.map((article, index) => {
+                      return <li className="list-group-item" key={index} headline={article.headline.main} url={article.web_url} pubdate={article.pub_date} snippet={article.snippet}>
+                          <Result buttontype="btn btn-block btn-success" buttonname="Save" url={article.web_url} headline={article.headline.main} snippet={article.snippet} pubdate={article.pub_date} />
+                        </li>;
+                    })}
+                  </ul>
+                </div> : <h3>No Results to Display</h3>}
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h3 className="panel-title">Saved Articles List</h3>
+            </div>
+            <div className="panel-body">
+              {this.state.saved.length ? <div className="list-overflow-container">
+                  <ul className="list-group">
+                    {this.state.saved.map((saved, index) => {
+                      return <li className="list-group-item" key={index} headline={saved.headline.main} url={saved.web_url} pubdate={saved.pub_date} snippet={saved.snippet}>
+                          <Result buttontype="btn btn-block btn-danger" buttonname="Delete" url={saved.web_url} headline={saved.headline.main} snippet={saved.snippet} pubdate={saved.pub_date} />
                         </li>;
                     })}
                   </ul>
